@@ -2,7 +2,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ID CARD PRINT & CONVERTER PORTAL</title>
+  <title>SB PRINTS - Professional ID Card & Print Portal</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -47,6 +47,99 @@
       align-items: center; 
       justify-content: center;
       color: var(--text-main);
+    }
+
+    /* Landing Page Styles */
+    #landingPage {
+      width: 100%;
+      max-width: 1100px;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .hero-container {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-color);
+      padding: 50px 30px;
+      border-radius: 24px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+    }
+
+    .hero-title {
+      font-size: 38px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #38bdf8 0%, #a855f7 50%, #f43f5e 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 15px;
+    }
+
+    .hero-subtitle {
+      font-size: 16px;
+      color: var(--text-muted);
+      max-width: 700px;
+      margin: 0 auto 35px auto;
+      line-height: 1.6;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+      text-align: left;
+    }
+
+    .feature-card {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      padding: 24px;
+      border-radius: 16px;
+      transition: 0.3s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent-blue);
+      box-shadow: 0 10px 30px rgba(56, 189, 248, 0.15);
+    }
+
+    .feature-card h3 {
+      font-size: 17px;
+      color: var(--accent-blue);
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .feature-card p {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .cta-btn {
+      display: inline-block;
+      padding: 15px 40px;
+      background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 8px 25px rgba(37, 99, 235, 0.5);
+      transition: 0.3s;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-decoration: none;
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(37, 99, 235, 0.7);
     }
 
     .portal-main-heading {
@@ -404,7 +497,6 @@
       border: 1px solid var(--border-color);
     }
 
-    /* Drag & Drop Card Styles */
     .file-gallery-list {
       display: flex;
       flex-wrap: wrap;
@@ -585,12 +677,40 @@
 </head>
 <body>
 
-<div class="portal-main-heading">
-  ID CARD PRINT & CONVERTER PORTAL
+<!-- LANDING PAGE -->
+<div id="landingPage">
+  <div class="hero-container">
+    <div class="badge">Welcome to SB Prints Portal</div>
+    <h1 class="hero-title">SB Prints</h1>
+    <p class="hero-subtitle">
+      Your ultimate destination for professional ID card printing, passport photo generation, high-DPI conversions, and advanced document management solutions. Fast, secure, and reliable web tools designed for maximum efficiency.
+    </p>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <h3>💳 ID Card Generator</h3>
+        <p>Auto-dimension cropping with precise 2.5mm gaps, broad black borders, and 5-slot A4 sheet alignment for perfect prints.</p>
+      </div>
+      <div class="feature-card">
+        <h3>👤 Passport Photo Studio</h3>
+        <p>Standard 35x45mm sizing, name & DOB stamping with custom font size control sliders, and flexible 4x6 or A4 layout generators.</p>
+      </div>
+      <div class="feature-card">
+        <h3>📑 Universal PDF & Arranger</h3>
+        <p>Seamlessly merge, reorder, rotate, and manage multi-page PDF, JPG, and PNG files with intuitive drag-and-drop support.</p>
+      </div>
+      <div class="feature-card">
+        <h3>🗜️ High-Res Tools & History</h3>
+        <p>Interactive PDF compression, manual 1200 DPI image extraction, and automated 30-day secure local print history storage.</p>
+      </div>
+    </div>
+
+    <button id="openPortalBtn" class="cta-btn">🚀 Open Portal & Get Started</button>
+  </div>
 </div>
 
 <!-- 1. Login Screen -->
-<div id="loginScreen" class="auth-box">
+<div id="loginScreen" class="auth-box" style="display:none;">
   <div class="badge">Protected Access</div>
   <h2 style="font-size: 22px; margin-bottom: 6px;">Sign In</h2>
   <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 20px;">Card & Photo Generator Portal</p>
@@ -602,6 +722,9 @@
   
   <div>
     <span id="goToChangePwd" class="auth-link">🔑 Change Password?</span>
+  </div>
+  <div>
+    <span id="backToHome" class="auth-link" style="color:var(--text-muted);">⬅️ Back to Home</span>
   </div>
 </div>
 
@@ -625,6 +748,10 @@
 
 <!-- 3. Main Portal Application -->
 <div id="mainApp">
+  <div class="portal-main-heading">
+    ID CARD PRINT & CONVERTER PORTAL
+  </div>
+
   <div class="tab-nav">
     <button class="tab-btn active" onclick="switchTab('tab-cards')">💳 ID Card (5 Slots)</button>
     <button class="tab-btn" onclick="switchTab('tab-passport')">👤 Passport Photos</button>
@@ -1120,6 +1247,21 @@
   const AUTH_EMAIL = "oneplus777000@gmail.com";
   const DEFAULT_PASS = "Pass@123";
 
+  // Landing Page Navigation Logic
+  const landingPage = document.getElementById('landingPage');
+  const openPortalBtn = document.getElementById('openPortalBtn');
+  const backToHome = document.getElementById('backToHome');
+
+  openPortalBtn.addEventListener('click', () => {
+    landingPage.style.display = 'none';
+    loginScreen.style.display = 'block';
+  });
+
+  backToHome.addEventListener('click', () => {
+    loginScreen.style.display = 'none';
+    landingPage.style.display = 'block';
+  });
+
   // ==========================================================
   // INDEXEDDB 30-DAY STORAGE ENGINE
   // ==========================================================
@@ -1367,7 +1509,8 @@
     sessionStorage.removeItem('isLoggedIn');
     mainApp.style.display = 'none';
     changePwdScreen.style.display = 'none';
-    loginScreen.style.display = 'block';
+    loginScreen.style.display = 'none';
+    landingPage.style.display = 'block';
     loginPass.value = '';
   });
 
@@ -2072,7 +2215,6 @@
           });
         }
       } else {
-        // JPG / PNG Images
         const arrayBuffer = await file.arrayBuffer();
         const thumbUrl = URL.createObjectURL(file);
 
@@ -2113,7 +2255,6 @@
       card.draggable = true;
       card.dataset.index = idx;
 
-      // HTML5 Drag and Drop Events
       card.addEventListener('dragstart', (e) => {
         draggedArrangerIdx = idx;
         card.classList.add('dragging');
@@ -2155,7 +2296,6 @@
       label.innerText = `${item.type === 'pdf' ? 'Page' : 'Img'} ${idx + 1}`;
       card.appendChild(label);
 
-      // Card Tools (Rotate & Delete - Drag to Move)
       const toolsBar = document.createElement('div');
       toolsBar.className = 'card-tools-bar';
 
@@ -2226,7 +2366,6 @@
 
         outPdf.addPage(copiedPage);
       } else {
-        // Embedding JPG/PNG on standard A4 Page
         let embeddedImg;
         if (pageObj.mimeType === 'image/png') {
           embeddedImg = await outPdf.embedPng(pageObj.sourceBytes);
@@ -2332,7 +2471,6 @@
         }
       });
 
-      // Cross (✖) Delete Button
       const delBtn = document.createElement('button');
       delBtn.className = 'item-delete-btn';
       delBtn.innerHTML = '✖';
@@ -2421,7 +2559,7 @@
 
   // ==========================================================
   // TAB 7: CUSTOM IMAGE RESIZER
-  // ==========================================
+  // ==========================================================
   let originalResizerImg = null;
   let resizerOriginalWidth = 0;
   let resizerOriginalHeight = 0;
@@ -2554,7 +2692,7 @@
 
   // ==========================================================
   // TAB 8: PDF TO HIGH-DPI JPG (MANUAL & BUTTON DPI)
-  // ==========================================
+  // ==========================================================
   let pdfToJpgDoc = null;
   let activeDpiValue = 300;
 
@@ -2643,7 +2781,7 @@
 
   // ==========================================================
   // TAB 9: INTERACTIVE PDF COMPRESSOR
-  // ==========================================
+  // ==========================================================
   let compressOriginalFile = null;
   let compressPdfDoc = null;
   let origFileSizeInKB = 0;
