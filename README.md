@@ -55,6 +55,7 @@
       max-width: 1100px;
       text-align: center;
       padding: 20px;
+      display: block;
     }
 
     .hero-container {
@@ -67,7 +68,7 @@
     }
 
     .hero-title {
-      font-size: 38px;
+      font-size: 42px;
       font-weight: 900;
       letter-spacing: 2px;
       text-transform: uppercase;
@@ -80,7 +81,7 @@
     .hero-subtitle {
       font-size: 16px;
       color: var(--text-muted);
-      max-width: 700px;
+      max-width: 750px;
       margin: 0 auto 35px auto;
       line-height: 1.6;
     }
@@ -164,6 +165,7 @@
       width: 100%;
       max-width: 400px;
       text-align: center;
+      display: none;
     }
 
     .badge {
@@ -710,7 +712,7 @@
 </div>
 
 <!-- 1. Login Screen -->
-<div id="loginScreen" class="auth-box" style="display:none;">
+<div id="loginScreen" class="auth-box">
   <div class="badge">Protected Access</div>
   <h2 style="font-size: 22px; margin-bottom: 6px;">Sign In</h2>
   <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 20px;">Card & Photo Generator Portal</p>
@@ -729,7 +731,7 @@
 </div>
 
 <!-- 2. Change Password Screen -->
-<div id="changePwdScreen" class="auth-box" style="display:none;">
+<div id="changePwdScreen" class="auth-box">
   <div class="badge">Security Settings</div>
   <h2 style="font-size: 20px; margin-bottom: 6px; color: var(--accent-blue);">🔑 Change Password</h2>
   <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 20px;">पुराने पासवर्ड का उपयोग करके नया पासवर्ड सेट करें</p>
@@ -1247,8 +1249,9 @@
   const AUTH_EMAIL = "oneplus777000@gmail.com";
   const DEFAULT_PASS = "Pass@123";
 
-  // Landing Page Navigation Logic
+  // Landing Page & Navigation Script Integration
   const landingPage = document.getElementById('landingPage');
+  const loginScreen = document.getElementById('loginScreen');
   const openPortalBtn = document.getElementById('openPortalBtn');
   const backToHome = document.getElementById('backToHome');
 
@@ -1404,7 +1407,6 @@
     }
   }
 
-  const loginScreen = document.getElementById('loginScreen');
   const changePwdScreen = document.getElementById('changePwdScreen');
   const mainApp = document.getElementById('mainApp');
   
