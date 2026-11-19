@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="hi">
 <head>
   <meta charset="UTF-8">
@@ -529,21 +530,9 @@
       transition: transform 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
     }
 
-    .draggable-card:active {
-      cursor: grabbing;
-    }
-
-    .draggable-card.dragging {
-      opacity: 0.4;
-      transform: scale(0.92);
-      border-color: #f59e0b;
-    }
-
-    .draggable-card.drag-over {
-      border: 2px dashed #38bdf8;
-      transform: scale(1.05);
-      background: rgba(56, 189, 248, 0.12);
-    }
+    .draggable-card:active { cursor: grabbing; }
+    .draggable-card.dragging { opacity: 0.4; transform: scale(0.92); border-color: #f59e0b; }
+    .draggable-card.drag-over { border: 2px dashed #38bdf8; transform: scale(1.05); background: rgba(56, 189, 248, 0.12); }
 
     .draggable-card canvas, .draggable-card img {
       width: 100%;
@@ -690,6 +679,10 @@
 
     <div class="features-grid">
       <div class="feature-card">
+        <h3>✨ Premium Auto ID Cropper</h3>
+        <p>Upload Aadhaar, PAN, Ayushman, or MahaID PDFs with password support for instant HD auto-cropping and A4 printing.</p>
+      </div>
+      <div class="feature-card">
         <h3>💳 ID Card Generator</h3>
         <p>Auto-dimension cropping with precise 2.5mm gaps, broad black borders, and 5-slot A4 sheet alignment for perfect prints.</p>
       </div>
@@ -698,12 +691,8 @@
         <p>Standard 35x45mm sizing, name & DOB stamping with custom font size control sliders, and flexible 4x6 or A4 layout generators.</p>
       </div>
       <div class="feature-card">
-        <h3>📑 Universal PDF & Arranger</h3>
-        <p>Seamlessly merge, reorder, rotate, and manage multi-page PDF, JPG, and PNG files with intuitive drag-and-drop support.</p>
-      </div>
-      <div class="feature-card">
-        <h3>🗜️ High-Res Tools & History</h3>
-        <p>Interactive PDF compression, manual 1200 DPI image extraction, and automated 30-day secure local print history storage.</p>
+        <h3>📑 Universal PDF & History</h3>
+        <p>Merge, reorder, compress PDFs, extract 1200 DPI images, and access automated 30-day local print history storage.</p>
       </div>
     </div>
 
@@ -755,6 +744,7 @@
   </div>
 
   <div class="tab-nav">
+    <button class="tab-btn" onclick="switchTab('tab-auto-id')" style="border-color: #f59e0b; color: #fbbf24;">✨ Premium Auto ID Cropper</button>
     <button class="tab-btn active" onclick="switchTab('tab-cards')">💳 ID Card (5 Slots)</button>
     <button class="tab-btn" onclick="switchTab('tab-passport')">👤 Passport Photos</button>
     <button class="tab-btn" onclick="switchTab('tab-name-passport')">📝 Name & Date Passport</button>
@@ -769,6 +759,64 @@
 
   <div class="container">
     <button id="logoutBtn" class="logout-btn">🔒 Logout</button>
+
+    <!-- TAB 0: PREMIUM AUTO ID CROPPER -->
+    <div id="tab-auto-id" class="tab-content">
+      <div class="badge" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; border-color: #f59e0b;">✨ Premium • Auto PDF Crop • Password Support</div>
+      <h1>Premium Auto ID Card Cropper</h1>
+      <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 15px;">
+        Card type nivda aani PDF upload kara. Password aslyas automatic vicharel aani Front + Back crop karun set karel.
+      </p>
+
+      <div class="control-panel" style="max-width: 650px;">
+        <label style="font-size: 13px; font-weight: 600; color: var(--accent-blue); display: block; margin-bottom: 8px;">
+          🪪 Card Type Nivda:
+        </label>
+        <div class="qty-select-group">
+          <select id="autoIdTypeSelect" class="text-field-input" style="max-width: 280px; text-align: center; font-weight: 600;">
+            <option value="aadhaar">Aadhaar Card (e-Aadhaar PDF)</option>
+            <option value="pan">PAN Card (NSDL / UTIITSL e-PAN)</option>
+            <option value="ayushman">Ayushman Bharat (PM-JAY Card)</option>
+            <option value="mahaid">MahaID / e-Shram / Voter ID</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="upload-section">
+        <label class="upload-box" for="autoIdPdfInput" style="max-width: 450px; border-color: #f59e0b;">
+          <strong style="display:block; font-size:14px; margin-bottom:4px; color:#fbbf24;">📄 Upload ID Card PDF</strong>
+          <div id="autoIdFileName" style="font-size: 12px; color: var(--text-muted);">Click karun PDF file nivda (Password Protected Supported)</div>
+        </label>
+        <input type="file" id="autoIdPdfInput" accept="application/pdf">
+      </div>
+
+      <div id="autoIdPassBox" class="control-panel" style="display: none; border-color: #ef4444; max-width: 420px;">
+        <div style="font-size: 13px; color: #fca5a5; font-weight: 600; margin-bottom: 8px;">🔒 Hi PDF Password Protected ahe!</div>
+        <input type="password" id="autoIdPasswordInput" class="login-input" placeholder="PDF Password taka (e.g. HARS1998)" style="margin-bottom: 10px;">
+        <button id="unlockAutoIdBtn" class="action-btn btn-add" style="width: 100%;">🔓 Unlock & Auto-Crop</button>
+        <div id="autoIdPassError" style="color: #ef4444; font-size: 12px; margin-top: 8px; display: none;">⚠️ Chuki cha password! Punha prayatna kara.</div>
+      </div>
+
+      <div id="autoIdStatusMsg" style="font-size: 13px; color: var(--accent-blue); margin: 10px 0; font-weight: 600;"></div>
+
+      <div class="preview-container" id="autoIdPreviewArea" style="display: none;">
+        <div class="preview-box">
+          <h4>Auto-Cropped Front</h4>
+          <canvas id="autoFrontCanvas" width="1013" height="638" style="width: 210px;"></canvas>
+          <button class="btn-manual-crop" onclick="manualAdjustAutoId('front')">✂️ Adjust Front</button>
+        </div>
+        <div class="preview-box">
+          <h4>Auto-Cropped Back</h4>
+          <canvas id="autoBackCanvas" width="1013" height="638" style="width: 210px;"></canvas>
+          <button class="btn-manual-crop" onclick="manualAdjustAutoId('back')">✂️ Adjust Back</button>
+        </div>
+      </div>
+
+      <div class="btn-group" id="autoIdActions" style="display: none;">
+        <button id="sendToA4SlotBtn" class="action-btn btn-add">➕ Send to A4 Sheet (5-Slot Tab)</button>
+        <button id="downloadSingleAutoIdBtn" class="action-btn btn-download">📥 Direct Download (A4 Print PDF)</button>
+      </div>
+    </div>
 
     <!-- TAB 1: 5 CARDS SYSTEM -->
     <div id="tab-cards" class="tab-content active">
@@ -887,7 +935,6 @@
 
       <div class="control-panel" style="text-align:left;">
         <div style="display:flex; flex-direction:column; gap:10px;">
-          
           <div style="background:rgba(15,23,42,0.6); padding:8px 12px; border-radius:8px; border:1px solid var(--border-color);">
             <div style="display:flex; justify-content:space-between; align-items:center;">
               <label style="font-size:11px; color:var(--text-muted);">👤 Candidate Name:</label>
@@ -914,7 +961,6 @@
             <input type="text" id="candDopInput" class="text-field-input" style="max-width:100%;" placeholder="DOP: DD/MM/YYYY" oninput="renderNamePassportPreview()">
             <input type="range" id="dopFontSlider" class="slider-range" min="12" max="30" value="20" oninput="updateDopFontSize(this.value)">
           </div>
-
         </div>
 
         <div style="margin-top:12px; text-align:center;">
@@ -999,7 +1045,7 @@
       </div>
     </div>
 
-    <!-- TAB 5: PDF, JPG, PNG ARRANGER (DRAG & DROP / HOLD & MOVE) -->
+    <!-- TAB 5: PDF, JPG, PNG ARRANGER -->
     <div id="tab-arranger" class="tab-content">
       <div class="badge">Multi-Format Arranger • PDF, JPG, PNG Support • Hold & Move Re-order</div>
       <h1>PDF, JPG, PNG Page Arranger & Organizer</h1>
@@ -1243,13 +1289,13 @@
 
 <script>
   if (typeof pdfjsLib !== 'undefined') {
-    pdfjsLib.GlobalWorkerOptions.workerSrc = '';
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
   }
 
   const AUTH_EMAIL = "oneplus777000@gmail.com";
   const DEFAULT_PASS = "Pass@123";
 
-  // Landing Page & Navigation Script Integration
+  // Landing Page & Navigation
   const landingPage = document.getElementById('landingPage');
   const loginScreen = document.getElementById('loginScreen');
   const openPortalBtn = document.getElementById('openPortalBtn');
@@ -1302,9 +1348,7 @@
       };
 
       store.add(record);
-      tx.oncomplete = () => {
-        cleanupOldHistoryRecords();
-      };
+      tx.oncomplete = () => cleanupOldHistoryRecords();
     } catch(err) {
       console.error("Storage error:", err);
     }
@@ -1373,11 +1417,7 @@
       if (!rec) return;
 
       const link = document.createElement('a');
-      if (typeof rec.data === 'string') {
-        link.href = rec.data;
-      } else {
-        link.href = URL.createObjectURL(rec.data);
-      }
+      link.href = (typeof rec.data === 'string') ? rec.data : URL.createObjectURL(rec.data);
       link.download = rec.fileName;
       link.click();
     };
@@ -1399,7 +1439,9 @@
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
     
-    event.target.classList.add('active');
+    if (event && event.target) {
+      event.target.classList.add('active');
+    }
     document.getElementById(tabId).classList.add('active');
 
     if (tabId === 'tab-history') {
@@ -1409,7 +1451,6 @@
 
   const changePwdScreen = document.getElementById('changePwdScreen');
   const mainApp = document.getElementById('mainApp');
-  
   const loginEmail = document.getElementById('loginEmail');
   const loginPass = document.getElementById('loginPass');
   const authBtn = document.getElementById('authBtn');
@@ -1620,6 +1661,14 @@
       }
       if (img1Loaded && img2Loaded) addCardBtn.disabled = false;
     } 
+    else if (activeCropType === 'auto_front' || activeCropType === 'auto_back') {
+      const croppedCanvas = cropper.getCroppedCanvas({ width: CARD_W, height: CARD_H, imageSmoothingQuality: 'high' });
+      const targetCtx = (activeCropType === 'auto_front')
+        ? document.getElementById('autoFrontCanvas').getContext('2d')
+        : document.getElementById('autoBackCanvas').getContext('2d');
+      targetCtx.clearRect(0, 0, CARD_W, CARD_H);
+      targetCtx.drawImage(croppedCanvas, 0, 0);
+    }
     else if (activeCropType === 'passport') {
       const croppedCanvas = cropper.getCroppedCanvas({ width: 413, height: 531, imageSmoothingQuality: 'high' });
       passportCtx.clearRect(0, 0, 413, 531);
@@ -1791,9 +1840,7 @@
   let passportLoaded = false;
   let passportSheetFormat = '4x6';
 
-  function setPassportQty(qty) {
-    passportQtyInput.value = qty;
-  }
+  function setPassportQty(qty) { passportQtyInput.value = qty; }
 
   document.getElementById('passportInput').addEventListener('change', (e) => {
     if (e.target.files[0]) {
@@ -1809,14 +1856,10 @@
 
     passportSheetCanvas.width = 1800;
     passportSheetCanvas.height = 1200;
-
     passportSheetCtx.fillStyle = '#ffffff';
     passportSheetCtx.fillRect(0, 0, 1800, 1200);
 
-    const pw = 413, ph = 531;
-    const startX = 50, startY = 50, gapX = 20, gapY = 35;
-    const maxCols = 4;
-
+    const pw = 413, ph = 531, startX = 50, startY = 50, gapX = 20, gapY = 35, maxCols = 4;
     let placed = 0;
     for (let r = 0; r < 2; r++) {
       for (let c = 0; c < maxCols; c++) {
@@ -1842,14 +1885,10 @@
 
     passportSheetCanvas.width = 2480;
     passportSheetCanvas.height = 3508;
-
     passportSheetCtx.fillStyle = '#ffffff';
     passportSheetCtx.fillRect(0, 0, 2480, 3508);
 
-    const pw = 413, ph = 531;
-    const startX = 75, startY = 80, gapX = 30, gapY = 40;
-    const maxCols = 5;
-
+    const pw = 413, ph = 531, startX = 75, startY = 80, gapX = 30, gapY = 40, maxCols = 5;
     let placed = 0;
     for (let r = 0; r < 6; r++) {
       for (let c = 0; c < maxCols; c++) {
@@ -1870,8 +1909,7 @@
 
   document.getElementById('downloadPassportPdfBtn').addEventListener('click', () => {
     const { jsPDF } = window.jspdf;
-    let fileName = '';
-    let pdf;
+    let fileName = '', pdf;
     if (passportSheetFormat === '4x6') {
       pdf = new jsPDF({ orientation: 'landscape', unit: 'in', format: [4, 6] });
       pdf.addImage(passportSheetCanvas.toDataURL('image/jpeg', 1.0), 'JPEG', 0, 0, 6, 4);
@@ -1897,26 +1935,19 @@
   let namePassportLoaded = false;
   let namePassportSheetFormat = '4x6';
 
-  let currentNameFontSize = 24;
-  let currentDobFontSize = 20;
-  let currentDopFontSize = 20;
+  let currentNameFontSize = 24, currentDobFontSize = 20, currentDopFontSize = 20;
 
-  function setNamePassportQty(qty) {
-    namePassportQtyInput.value = qty;
-  }
-
+  function setNamePassportQty(qty) { namePassportQtyInput.value = qty; }
   function updateNameFontSize(val) {
     currentNameFontSize = parseInt(val) || 24;
     document.getElementById('nameFontLabel').innerText = `Size: ${currentNameFontSize}px`;
     renderNamePassportPreview();
   }
-
   function updateDobFontSize(val) {
     currentDobFontSize = parseInt(val) || 20;
     document.getElementById('dobFontLabel').innerText = `Size: ${currentDobFontSize}px`;
     renderNamePassportPreview();
   }
-
   function updateDopFontSize(val) {
     currentDopFontSize = parseInt(val) || 20;
     document.getElementById('dopFontLabel').innerText = `Size: ${currentDopFontSize}px`;
@@ -1934,11 +1965,9 @@
     const words = text.split(' ');
     const lines = [];
     let currentLine = words[0];
-
     for (let i = 1; i < words.length; i++) {
       const word = words[i];
-      const width = context.measureText(currentLine + " " + word).width;
-      if (width < maxWidth) {
+      if (context.measureText(currentLine + " " + word).width < maxWidth) {
         currentLine += " " + word;
       } else {
         lines.push(currentLine);
@@ -1952,43 +1981,27 @@
   function renderNamePassportPreview() {
     namePassportCtx.fillStyle = '#ffffff';
     namePassportCtx.fillRect(0, 0, 413, 531);
-
-    if (rawNamePassportImg) {
-      namePassportCtx.drawImage(rawNamePassportImg, 0, 0, 413, 531);
-    }
+    if (rawNamePassportImg) namePassportCtx.drawImage(rawNamePassportImg, 0, 0, 413, 531);
 
     const cName = document.getElementById('candNameInput').value.trim();
-    let rawDob = document.getElementById('candDobInput').value.trim();
-    let rawDop = document.getElementById('candDopInput').value.trim();
+    const rawDob = document.getElementById('candDobInput').value.trim();
+    const rawDop = document.getElementById('candDopInput').value.trim();
 
-    let formattedDob = '';
-    if (rawDob) {
-      formattedDob = rawDob.toUpperCase().startsWith('DOB:') ? rawDob : `DOB: ${rawDob}`;
-    }
-
-    let formattedDop = '';
-    if (rawDop) {
-      formattedDop = rawDop.toUpperCase().startsWith('DOP:') ? rawDop : `DOP: ${rawDop}`;
-    }
+    const formattedDob = rawDob ? (rawDob.toUpperCase().startsWith('DOB:') ? rawDob : `DOB: ${rawDob}`) : '';
+    const formattedDop = rawDop ? (rawDop.toUpperCase().startsWith('DOP:') ? rawDop : `DOP: ${rawDop}`) : '';
 
     if (cName || formattedDob || formattedDop) {
       namePassportCtx.font = `900 ${currentNameFontSize}px Poppins, Arial, sans-serif`;
       const nameLines = cName ? wrapNameText(namePassportCtx, cName.toUpperCase(), 390) : [];
-      
-      let dateLineCount = 0;
-      if (formattedDob) dateLineCount++;
-      if (formattedDop) dateLineCount++;
 
       const nameBlockHeight = nameLines.length * (currentNameFontSize + 8);
       const dobBlockHeight = formattedDob ? (currentDobFontSize + 8) : 0;
       const dopBlockHeight = formattedDop ? (currentDopFontSize + 8) : 0;
-      
       const stripHeight = Math.max(120, nameBlockHeight + dobBlockHeight + dopBlockHeight + 16);
       const stripY = 531 - stripHeight;
 
       namePassportCtx.fillStyle = '#ffffff';
       namePassportCtx.fillRect(0, stripY, 413, stripHeight);
-
       namePassportCtx.strokeStyle = '#000000';
       namePassportCtx.lineWidth = 3;
       namePassportCtx.beginPath();
@@ -2000,7 +2013,6 @@
       namePassportCtx.textAlign = 'center';
 
       let yPos = stripY + currentNameFontSize + 6;
-
       namePassportCtx.font = `900 ${currentNameFontSize}px Poppins, Arial, sans-serif`;
       nameLines.forEach(line => {
         namePassportCtx.fillText(line, 413 / 2, yPos);
@@ -2029,14 +2041,10 @@
 
     namePassportSheetCanvas.width = 1800;
     namePassportSheetCanvas.height = 1200;
-
     namePassportSheetCtx.fillStyle = '#ffffff';
     namePassportSheetCtx.fillRect(0, 0, 1800, 1200);
 
-    const pw = 413, ph = 531;
-    const startX = 50, startY = 50, gapX = 20, gapY = 35;
-    const maxCols = 4;
-
+    const pw = 413, ph = 531, startX = 50, startY = 50, gapX = 20, gapY = 35, maxCols = 4;
     let placed = 0;
     for (let r = 0; r < 2; r++) {
       for (let c = 0; c < maxCols; c++) {
@@ -2062,14 +2070,10 @@
 
     namePassportSheetCanvas.width = 2480;
     namePassportSheetCanvas.height = 3508;
-
     namePassportSheetCtx.fillStyle = '#ffffff';
     namePassportSheetCtx.fillRect(0, 0, 2480, 3508);
 
-    const pw = 413, ph = 531;
-    const startX = 75, startY = 80, gapX = 30, gapY = 40;
-    const maxCols = 5;
-
+    const pw = 413, ph = 531, startX = 75, startY = 80, gapX = 30, gapY = 40, maxCols = 5;
     let placed = 0;
     for (let r = 0; r < 6; r++) {
       for (let c = 0; c < maxCols; c++) {
@@ -2090,8 +2094,7 @@
 
   document.getElementById('downloadNamePassportPdfBtn').addEventListener('click', () => {
     const { jsPDF } = window.jspdf;
-    let fileName = '';
-    let pdf;
+    let fileName = '', pdf;
     if (namePassportSheetFormat === '4x6') {
       pdf = new jsPDF({ orientation: 'landscape', unit: 'in', format: [4, 6] });
       pdf.addImage(namePassportSheetCanvas.toDataURL('image/jpeg', 1.0), 'JPEG', 0, 0, 6, 4);
@@ -2116,9 +2119,7 @@
   const photo4x6QtyInput = document.getElementById('photo4x6QtyInput');
   let photo4x6Loaded = false;
 
-  function set4x6Qty(qty) {
-    photo4x6QtyInput.value = qty;
-  }
+  function set4x6Qty(qty) { photo4x6QtyInput.value = qty; }
 
   document.getElementById('photo4x6Input').addEventListener('change', (e) => {
     if (e.target.files[0]) {
@@ -2144,14 +2145,10 @@
 
     a4_4x6_SheetCanvas.width = 2480;
     a4_4x6_SheetCanvas.height = 3508;
-
     a4_4x6_SheetCtx.fillStyle = '#ffffff';
     a4_4x6_SheetCtx.fillRect(0, 0, 2480, 3508);
 
-    const pw = 1140, ph = 1680;
-    const gapX = 60, gapY = 60;
-    const startX = 70, startY = 40;
-
+    const pw = 1140, ph = 1680, gapX = 60, gapY = 60, startX = 70, startY = 40;
     const positions = [
       { x: startX, y: startY },
       { x: startX + pw + gapX, y: startY },
@@ -2182,7 +2179,7 @@
   });
 
   // ==========================================================
-  // TAB 5: PDF, JPG, PNG ARRANGER ENGINE (HOLD & MOVE DRAG & DROP)
+  // TAB 5: PDF, JPG, PNG ARRANGER ENGINE
   // ==========================================================
   let arrangedPdfPagesList = [];
   let draggedArrangerIdx = null;
@@ -2199,13 +2196,10 @@
         for (let i = 1; i <= pdf.numPages; i++) {
           const page = await pdf.getPage(i);
           const viewport = page.getViewport({ scale: 0.35 });
-
           const canvas = document.createElement('canvas');
-          const ctx = canvas.getContext('2d');
           canvas.width = viewport.width;
           canvas.height = viewport.height;
-
-          await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+          await page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport }).promise;
 
           arrangedPdfPagesList.push({
             type: 'pdf',
@@ -2218,14 +2212,12 @@
         }
       } else {
         const arrayBuffer = await file.arrayBuffer();
-        const thumbUrl = URL.createObjectURL(file);
-
         arrangedPdfPagesList.push({
           type: 'image',
           mimeType: file.type,
           sourceBytes: arrayBuffer,
           pageIndex: 0,
-          thumbDataUrl: thumbUrl,
+          thumbDataUrl: URL.createObjectURL(file),
           rotation: 0,
           originalDocName: file.name
         });
@@ -2262,22 +2254,16 @@
         card.classList.add('dragging');
         e.dataTransfer.effectAllowed = 'move';
       });
-
       card.addEventListener('dragend', () => {
         card.classList.remove('dragging');
         document.querySelectorAll('#arrangerGridList .draggable-card').forEach(c => c.classList.remove('drag-over'));
       });
-
       card.addEventListener('dragover', (e) => {
         e.preventDefault();
         e.dataTransfer.dropEffect = 'move';
         card.classList.add('drag-over');
       });
-
-      card.addEventListener('dragleave', () => {
-        card.classList.remove('drag-over');
-      });
-
+      card.addEventListener('dragleave', () => card.classList.remove('drag-over'));
       card.addEventListener('drop', (e) => {
         e.preventDefault();
         card.classList.remove('drag-over');
@@ -2304,25 +2290,16 @@
       const rotateBtn = document.createElement('button');
       rotateBtn.className = 'mini-tool-btn';
       rotateBtn.innerHTML = '🔄 Rotate';
-      rotateBtn.title = 'Rotate 90°';
-      rotateBtn.onclick = (e) => {
-        e.stopPropagation();
-        rotateArrangerPage(idx);
-      };
+      rotateBtn.onclick = (e) => { e.stopPropagation(); rotateArrangerPage(idx); };
 
       const delBtn = document.createElement('button');
       delBtn.className = 'mini-tool-btn btn-del';
       delBtn.innerHTML = '🗑️';
-      delBtn.title = 'Delete Page';
-      delBtn.onclick = (e) => {
-        e.stopPropagation();
-        deleteArrangerPage(idx);
-      };
+      delBtn.onclick = (e) => { e.stopPropagation(); deleteArrangerPage(idx); };
 
       toolsBar.appendChild(rotateBtn);
       toolsBar.appendChild(delBtn);
       card.appendChild(toolsBar);
-
       grid.appendChild(card);
     });
   }
@@ -2346,7 +2323,6 @@
 
   document.getElementById('saveArrangedPdfBtn').addEventListener('click', async () => {
     if (!arrangedPdfPagesList.length) return;
-
     const { PDFDocument, degrees } = PDFLib;
     const outPdf = await PDFDocument.create();
     const loadedDocsMap = new Map();
@@ -2358,30 +2334,18 @@
           srcDoc = await PDFDocument.load(pageObj.sourceBytes);
           loadedDocsMap.set(pageObj.sourceBytes, srcDoc);
         }
-
         const [copiedPage] = await outPdf.copyPages(srcDoc, [pageObj.pageIndex]);
-        
         if (pageObj.rotation !== 0) {
-          const currentRot = copiedPage.getRotation().angle;
-          copiedPage.setRotation(degrees(currentRot + pageObj.rotation));
+          copiedPage.setRotation(degrees(copiedPage.getRotation().angle + pageObj.rotation));
         }
-
         outPdf.addPage(copiedPage);
       } else {
-        let embeddedImg;
-        if (pageObj.mimeType === 'image/png') {
-          embeddedImg = await outPdf.embedPng(pageObj.sourceBytes);
-        } else {
-          embeddedImg = await outPdf.embedJpg(pageObj.sourceBytes);
-        }
-
+        const embeddedImg = (pageObj.mimeType === 'image/png')
+          ? await outPdf.embedPng(pageObj.sourceBytes)
+          : await outPdf.embedJpg(pageObj.sourceBytes);
         const page = outPdf.addPage([595.28, 841.89]);
         const imgDims = embeddedImg.scaleToFit(555.28, 801.89);
-
-        if (pageObj.rotation !== 0) {
-          page.setRotation(degrees(pageObj.rotation));
-        }
-
+        if (pageObj.rotation !== 0) page.setRotation(degrees(pageObj.rotation));
         page.drawImage(embeddedImg, {
           x: (595.28 - imgDims.width) / 2,
           y: (841.89 - imgDims.height) / 2,
@@ -2394,7 +2358,6 @@
     const pdfBytes = await outPdf.save();
     const blob = new Blob([pdfBytes], { type: 'application/pdf' });
     const fileName = `Arranged_Document_${arrangedPdfPagesList.length}_Pages.pdf`;
-
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
     link.download = fileName;
@@ -2403,7 +2366,7 @@
   });
 
   // ==========================================================
-  // TAB 6: UNIVERSAL MERGE (DRAG & DROP RE-ORDER SUPPORT)
+  // TAB 6: UNIVERSAL MERGE
   // ==========================================================
   let universalFiles = [];
   let draggedUniversalIdx = null;
@@ -2411,7 +2374,6 @@
   document.getElementById('universalMultiInput').addEventListener('change', function(e) {
     const files = Array.from(e.target.files);
     if (!files.length) return;
-
     universalFiles = universalFiles.concat(files);
     renderUniversalGallery();
     this.value = '';
@@ -2447,22 +2409,16 @@
         item.classList.add('dragging');
         e.dataTransfer.effectAllowed = 'move';
       });
-
       item.addEventListener('dragend', () => {
         item.classList.remove('dragging');
         document.querySelectorAll('#universalGalleryList .draggable-card').forEach(c => c.classList.remove('drag-over'));
       });
-
       item.addEventListener('dragover', (e) => {
         e.preventDefault();
         e.dataTransfer.dropEffect = 'move';
         item.classList.add('drag-over');
       });
-
-      item.addEventListener('dragleave', () => {
-        item.classList.remove('drag-over');
-      });
-
+      item.addEventListener('dragleave', () => item.classList.remove('drag-over'));
       item.addEventListener('drop', (e) => {
         e.preventDefault();
         item.classList.remove('drag-over');
@@ -2476,20 +2432,12 @@
       const delBtn = document.createElement('button');
       delBtn.className = 'item-delete-btn';
       delBtn.innerHTML = '✖';
-      delBtn.title = 'Remove this file';
-      delBtn.onclick = function(e) {
-        e.stopPropagation();
-        removeUniversalFile(idx);
-      };
+      delBtn.onclick = function(e) { e.stopPropagation(); removeUniversalFile(idx); };
       item.appendChild(delBtn);
 
       if (file.type === 'application/pdf') {
         const icon = document.createElement('div');
-        icon.style.height = '135px';
-        icon.style.display = 'flex';
-        icon.style.alignItems = 'center';
-        icon.style.justifyContent = 'center';
-        icon.style.fontSize = '36px';
+        icon.style.cssText = 'height:135px;display:flex;align-items:center;justify-content:center;font-size:36px;';
         icon.innerText = '📄';
         item.appendChild(icon);
       } else {
@@ -2503,7 +2451,6 @@
       label.innerText = file.name;
       label.title = file.name;
       item.appendChild(label);
-
       gallery.appendChild(item);
     });
   }
@@ -2516,7 +2463,6 @@
 
   document.getElementById('convertUniversalToPdfBtn').addEventListener('click', async () => {
     if (!universalFiles.length) return;
-
     const { PDFDocument } = PDFLib;
     const mergedPdf = await PDFDocument.create();
 
@@ -2529,16 +2475,11 @@
         const copiedPages = await mergedPdf.copyPages(externalPdf, externalPdf.getPageIndices());
         copiedPages.forEach((page) => mergedPdf.addPage(page));
       } else {
-        let embeddedImage;
-        if (file.type === 'image/png') {
-          embeddedImage = await mergedPdf.embedPng(fileBytes);
-        } else {
-          embeddedImage = await mergedPdf.embedJpg(fileBytes);
-        }
-
+        const embeddedImage = (file.type === 'image/png')
+          ? await mergedPdf.embedPng(fileBytes)
+          : await mergedPdf.embedJpg(fileBytes);
         const page = mergedPdf.addPage([595.28, 841.89]);
         const imgDims = embeddedImage.scaleToFit(555.28, 801.89);
-
         page.drawImage(embeddedImage, {
           x: (595.28 - imgDims.width) / 2,
           y: (841.89 - imgDims.height) / 2,
@@ -2551,7 +2492,6 @@
     const mergedPdfBytes = await mergedPdf.save();
     const blob = new Blob([mergedPdfBytes], { type: 'application/pdf' });
     const fileName = `Merged_Combined_Document.pdf`;
-    
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
     link.download = fileName;
@@ -2562,9 +2502,7 @@
   // ==========================================================
   // TAB 7: CUSTOM IMAGE RESIZER
   // ==========================================================
-  let originalResizerImg = null;
-  let resizerOriginalWidth = 0;
-  let resizerOriginalHeight = 0;
+  let originalResizerImg = null, resizerOriginalWidth = 0, resizerOriginalHeight = 0;
   const resizerCanvas = document.getElementById('resizerPreviewCanvas');
   const resizerCtx = resizerCanvas.getContext('2d');
   const DPI_SCALE = 300;
@@ -2572,7 +2510,6 @@
   document.getElementById('resizerImageInput').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (!file) return;
-
     document.getElementById('resizerFileName').innerText = `✅ ${file.name}`;
     const reader = new FileReader();
     reader.onload = function(evt) {
@@ -2580,11 +2517,9 @@
       originalResizerImg.onload = function() {
         resizerOriginalWidth = originalResizerImg.width;
         resizerOriginalHeight = originalResizerImg.height;
-
         document.getElementById('resizerUnitSelect').value = 'px';
         document.getElementById('resizerWidthInput').value = resizerOriginalWidth;
         document.getElementById('resizerHeightInput').value = resizerOriginalHeight;
-
         document.getElementById('resizerControlsPanel').style.display = 'block';
         updateResizerCanvas();
       };
@@ -2597,10 +2532,7 @@
     const unit = document.getElementById('resizerUnitSelect').value;
     const wVal = parseFloat(document.getElementById('resizerWidthInput').value) || 1;
     const hVal = parseFloat(document.getElementById('resizerHeightInput').value) || 1;
-
-    let targetW = wVal;
-    let targetH = hVal;
-
+    let targetW = wVal, targetH = hVal;
     if (unit === 'mm') {
       targetW = Math.round((wVal / 25.4) * DPI_SCALE);
       targetH = Math.round((hVal / 25.4) * DPI_SCALE);
@@ -2608,35 +2540,25 @@
       targetW = Math.round((wVal / 2.54) * DPI_SCALE);
       targetH = Math.round((hVal / 2.54) * DPI_SCALE);
     }
-
-    return {
-      width: Math.max(1, targetW),
-      height: Math.max(1, targetH)
-    };
+    return { width: Math.max(1, targetW), height: Math.max(1, targetH) };
   }
 
   function updateResizerCanvas() {
     if (!originalResizerImg) return;
     const dims = getPixelDimensions();
-
     resizerCanvas.width = dims.width;
     resizerCanvas.height = dims.height;
-
     resizerCtx.clearRect(0, 0, dims.width, dims.height);
     resizerCtx.drawImage(originalResizerImg, 0, 0, dims.width, dims.height);
-
     const unit = document.getElementById('resizerUnitSelect').value;
     const wInp = document.getElementById('resizerWidthInput').value;
     const hInp = document.getElementById('resizerHeightInput').value;
-
     document.getElementById('resizerOutputInfo').innerText = `Target: ${wInp} x ${hInp} ${unit} (${dims.width} x ${dims.height} px)`;
   }
 
   function onResizerDimensionChange(changed) {
     if (!originalResizerImg) return;
-    const isLocked = document.getElementById('resizerAspectLock').checked;
-
-    if (isLocked && resizerOriginalWidth > 0 && resizerOriginalHeight > 0) {
+    if (document.getElementById('resizerAspectLock').checked && resizerOriginalWidth > 0 && resizerOriginalHeight > 0) {
       const ratio = resizerOriginalHeight / resizerOriginalWidth;
       if (changed === 'width') {
         const w = parseFloat(document.getElementById('resizerWidthInput').value) || 0;
@@ -2652,7 +2574,6 @@
   function onResizerUnitChange() {
     if (!originalResizerImg) return;
     const unit = document.getElementById('resizerUnitSelect').value;
-
     if (unit === 'px') {
       document.getElementById('resizerWidthInput').value = resizerOriginalWidth;
       document.getElementById('resizerHeightInput').value = resizerOriginalHeight;
@@ -2671,7 +2592,6 @@
     const dims = getPixelDimensions();
     const dataUrl = resizerCanvas.toDataURL('image/jpeg', 0.95);
     const fileName = `Resized_${dims.width}x${dims.height}px.jpg`;
-    
     const link = document.createElement('a');
     link.href = dataUrl;
     link.download = fileName;
@@ -2684,7 +2604,6 @@
     const dims = getPixelDimensions();
     const dataUrl = resizerCanvas.toDataURL('image/png');
     const fileName = `Resized_${dims.width}x${dims.height}px.png`;
-
     const link = document.createElement('a');
     link.href = dataUrl;
     link.download = fileName;
@@ -2693,10 +2612,9 @@
   });
 
   // ==========================================================
-  // TAB 8: PDF TO HIGH-DPI JPG (MANUAL & BUTTON DPI)
+  // TAB 8: PDF TO HIGH-DPI JPG
   // ==========================================================
-  let pdfToJpgDoc = null;
-  let activeDpiValue = 300;
+  let pdfToJpgDoc = null, activeDpiValue = 300;
 
   function setPdfDpi(dpi) {
     activeDpiValue = dpi;
@@ -2705,9 +2623,7 @@
   }
 
   function updateManualDpi(val) {
-    let dpi = parseInt(val) || 300;
-    if (dpi < 50) dpi = 50;
-    if (dpi > 1200) dpi = 1200;
+    let dpi = Math.max(50, Math.min(1200, parseInt(val) || 300));
     activeDpiValue = dpi;
     document.getElementById('currentDpiDisplay').innerText = `${dpi} DPI`;
   }
@@ -2715,17 +2631,14 @@
   document.getElementById('pdfToJpgInput').addEventListener('change', async function(e) {
     const file = e.target.files[0];
     if (!file) return;
-
     document.getElementById('pdfToJpgStatus').innerText = `✅ ${file.name}`;
     const arrayBuffer = await file.arrayBuffer();
-
     pdfToJpgDoc = await pdfjsLib.getDocument({ data: new Uint8Array(arrayBuffer) }).promise;
     document.getElementById('pdfToJpgControls').style.display = 'block';
   });
 
   document.getElementById('startPdfToJpgBtn').addEventListener('click', async () => {
     if (!pdfToJpgDoc) return;
-
     const progress = document.getElementById('pdfConversionProgress');
     const scaleFactor = activeDpiValue / 72;
     const totalPages = pdfToJpgDoc.numPages;
@@ -2734,13 +2647,10 @@
       progress.innerText = `⏳ Rendering 1 page at ${activeDpiValue} DPI...`;
       const page = await pdfToJpgDoc.getPage(1);
       const viewport = page.getViewport({ scale: scaleFactor });
-
       const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
       canvas.width = viewport.width;
       canvas.height = viewport.height;
-
-      await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+      await page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport }).promise;
 
       canvas.toBlob((blob) => {
         const fileName = `Page_1_${activeDpiValue}DPI.jpg`;
@@ -2751,24 +2661,19 @@
         progress.innerText = `✅ Download Complete (1 Page @ ${activeDpiValue} DPI)`;
         saveToHistory('PDF to JPG (Single)', fileName, blob, 'image/jpeg');
       }, 'image/jpeg', 0.95);
-
     } else {
       const zip = new JSZip();
       for (let i = 1; i <= totalPages; i++) {
         progress.innerText = `⏳ Processing Page ${i} / ${totalPages} at ${activeDpiValue} DPI...`;
         const page = await pdfToJpgDoc.getPage(i);
         const viewport = page.getViewport({ scale: scaleFactor });
-
         const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
         canvas.width = viewport.width;
         canvas.height = viewport.height;
-
-        await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+        await page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport }).promise;
         const imgData = canvas.toDataURL('image/jpeg', 0.95).split(',')[1];
         zip.file(`Page_${i}_${activeDpiValue}DPI.jpg`, imgData, { base64: true });
       }
-
       progress.innerText = '📦 Creating ZIP archive...';
       const zipContent = await zip.generateAsync({ type: 'blob' });
       const fileName = `PDF_to_JPG_${activeDpiValue}DPI_Bundle.zip`;
@@ -2784,23 +2689,16 @@
   // ==========================================================
   // TAB 9: INTERACTIVE PDF COMPRESSOR
   // ==========================================================
-  let compressOriginalFile = null;
-  let compressPdfDoc = null;
-  let origFileSizeInKB = 0;
+  let compressOriginalFile = null, compressPdfDoc = null;
 
   document.getElementById('pdfCompressInput').addEventListener('change', async function(e) {
     const file = e.target.files[0];
     if (!file) return;
-
     compressOriginalFile = file;
-    origFileSizeInKB = (file.size / 1024).toFixed(1);
-    
     document.getElementById('pdfCompressStatus').innerText = `✅ ${file.name}`;
     document.getElementById('origFileSizeDisplay').innerText = formatBytes(file.size);
-
     const arrayBuffer = await file.arrayBuffer();
     compressPdfDoc = await pdfjsLib.getDocument({ data: new Uint8Array(arrayBuffer) }).promise;
-
     document.getElementById('compressorControlsArea').style.display = 'block';
     onCompressSliderChange(document.getElementById('compressQualitySlider').value);
   });
@@ -2810,9 +2708,7 @@
     let levelText = 'Medium';
     if (quality < 35) levelText = 'High Compression (Smallest Size)';
     else if (quality > 75) levelText = 'Light Compression (High Quality)';
-    
     document.getElementById('compressQualityLabel').innerText = `${quality}% (${levelText})`;
-
     const ratio = Math.pow(quality / 100, 1.3);
     const estBytes = compressOriginalFile.size * Math.max(0.15, ratio);
     document.getElementById('estFileSizeDisplay').innerText = formatBytes(estBytes);
@@ -2826,15 +2722,11 @@
 
   document.getElementById('startCompressDownloadBtn').addEventListener('click', async () => {
     if (!compressPdfDoc) return;
-
     const progress = document.getElementById('compressProgressMsg');
     const qualityVal = parseInt(document.getElementById('compressQualitySlider').value);
     const jpegQuality = qualityVal / 100;
-    
-    const renderScale = Math.max(1.0, (qualityVal / 100) * 2.2); 
+    const renderScale = Math.max(1.0, (qualityVal / 100) * 2.2);
     const totalPages = compressPdfDoc.numPages;
-
-    progress.innerText = `⏳ Compressing ${totalPages} pages...`;
 
     const { jsPDF } = window.jspdf;
     let outPdf = null;
@@ -2843,13 +2735,10 @@
       progress.innerText = `⏳ Compressing Page ${i} of ${totalPages}...`;
       const page = await compressPdfDoc.getPage(i);
       const viewport = page.getViewport({ scale: renderScale });
-
       const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
       canvas.width = viewport.width;
       canvas.height = viewport.height;
-
-      await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+      await page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport }).promise;
       const imgData = canvas.toDataURL('image/jpeg', jpegQuality);
 
       const orientation = viewport.width > viewport.height ? 'landscape' : 'portrait';
@@ -2858,7 +2747,6 @@
       } else {
         outPdf.addPage([viewport.width, viewport.height], orientation);
       }
-
       outPdf.addImage(imgData, 'JPEG', 0, 0, viewport.width, viewport.height, undefined, 'FAST');
     }
 
@@ -2867,6 +2755,196 @@
     progress.innerText = `✅ Compression Complete! Downloading...`;
     outPdf.save(fileName);
     saveToHistory('PDF Compressor', fileName, blob, 'application/pdf');
+  });
+
+  // ==========================================================
+  // PREMIUM AUTO ID CROPPER ENGINE (PDF + PASSWORD + PRESETS)
+  // ==========================================================
+  let autoIdPdfBytes = null;
+  let autoIdFullPageCanvas = null;
+  let autoIdFullPage2Canvas = null;
+
+  const ID_PRESETS = {
+    aadhaar: {
+      front: { x: 0.052, y: 0.672, w: 0.438, h: 0.198 },
+      back:  { x: 0.506, y: 0.672, w: 0.438, h: 0.198 }
+    },
+    pan: {
+      front: { x: 0.062, y: 0.720, w: 0.420, h: 0.190 },
+      back:  { x: 0.515, y: 0.720, w: 0.420, h: 0.190 }
+    },
+    ayushman: {
+      front: { x: 0.050, y: 0.050, w: 0.435, h: 0.250 },
+      back:  { x: 0.515, y: 0.050, w: 0.435, h: 0.250 }
+    },
+    mahaid: {
+      front: { x: 0.055, y: 0.080, w: 0.430, h: 0.240 },
+      back:  { x: 0.515, y: 0.080, w: 0.430, h: 0.240 }
+    }
+  };
+
+  document.getElementById('autoIdPdfInput').addEventListener('change', async function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    document.getElementById('autoIdFileName').innerText = `✅ Selected: ${file.name}`;
+    document.getElementById('autoIdPassBox').style.display = 'none';
+    document.getElementById('autoIdPassError').style.display = 'none';
+    document.getElementById('autoIdPasswordInput').value = '';
+    document.getElementById('autoIdPreviewArea').style.display = 'none';
+    document.getElementById('autoIdActions').style.display = 'none';
+
+    autoIdPdfBytes = await file.arrayBuffer();
+    processAutoIdPdf('');
+  });
+
+  document.getElementById('unlockAutoIdBtn').addEventListener('click', () => {
+    const pwd = document.getElementById('autoIdPasswordInput').value.trim();
+    document.getElementById('autoIdPassError').style.display = 'none';
+    processAutoIdPdf(pwd);
+  });
+
+  document.getElementById('autoIdPasswordInput').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') document.getElementById('unlockAutoIdBtn').click();
+  });
+
+  async function processAutoIdPdf(password) {
+    const statusMsg = document.getElementById('autoIdStatusMsg');
+    statusMsg.innerText = '⏳ PDF process hot ahe...';
+
+    try {
+      const loadingTask = pdfjsLib.getDocument({
+        data: new Uint8Array(autoIdPdfBytes.slice(0)),
+        password: password
+      });
+
+      const pdf = await loadingTask.promise;
+      document.getElementById('autoIdPassBox').style.display = 'none';
+      statusMsg.innerText = '✂️ High-HD (300 DPI) madhe Auto-Crop karat ahe...';
+
+      const page1 = await pdf.getPage(1);
+      const vp1 = page1.getViewport({ scale: 4.0 });
+      autoIdFullPageCanvas = document.createElement('canvas');
+      autoIdFullPageCanvas.width = vp1.width;
+      autoIdFullPageCanvas.height = vp1.height;
+      await page1.render({ canvasContext: autoIdFullPageCanvas.getContext('2d'), viewport: vp1 }).promise;
+
+      const cardType = document.getElementById('autoIdTypeSelect').value;
+      const fCanvas = document.getElementById('autoFrontCanvas');
+      const bCanvas = document.getElementById('autoBackCanvas');
+      const fCtx = fCanvas.getContext('2d');
+      const bCtx = bCanvas.getContext('2d');
+
+      fCtx.clearRect(0, 0, CARD_W, CARD_H);
+      bCtx.clearRect(0, 0, CARD_W, CARD_H);
+
+      if ((cardType === 'ayushman' || cardType === 'mahaid') && pdf.numPages >= 2) {
+        const page2 = await pdf.getPage(2);
+        const vp2 = page2.getViewport({ scale: 4.0 });
+        autoIdFullPage2Canvas = document.createElement('canvas');
+        autoIdFullPage2Canvas.width = vp2.width;
+        autoIdFullPage2Canvas.height = vp2.height;
+        await page2.render({ canvasContext: autoIdFullPage2Canvas.getContext('2d'), viewport: vp2 }).promise;
+
+        fCtx.drawImage(autoIdFullPageCanvas, 0, 0, vp1.width, vp1.height, 0, 0, CARD_W, CARD_H);
+        bCtx.drawImage(autoIdFullPage2Canvas, 0, 0, vp2.width, vp2.height, 0, 0, CARD_W, CARD_H);
+      } else {
+        autoIdFullPage2Canvas = null;
+        const preset = ID_PRESETS[cardType];
+        fCtx.drawImage(
+          autoIdFullPageCanvas,
+          vp1.width * preset.front.x, vp1.height * preset.front.y,
+          vp1.width * preset.front.w, vp1.height * preset.front.h,
+          0, 0, CARD_W, CARD_H
+        );
+        bCtx.drawImage(
+          autoIdFullPageCanvas,
+          vp1.width * preset.back.x, vp1.height * preset.back.y,
+          vp1.width * preset.back.w, vp1.height * preset.back.h,
+          0, 0, CARD_W, CARD_H
+        );
+      }
+
+      document.getElementById('autoIdPreviewArea').style.display = 'flex';
+      document.getElementById('autoIdActions').style.display = 'flex';
+      statusMsg.innerText = '✅ Auto-Crop purna zhale! Khali preview check kara.';
+
+    } catch (err) {
+      if (err.name === 'PasswordException') {
+        statusMsg.innerText = '';
+        document.getElementById('autoIdPassBox').style.display = 'block';
+        if (password !== '') {
+          document.getElementById('autoIdPassError').style.display = 'block';
+        }
+      } else {
+        statusMsg.innerText = '❌ PDF load kartana error aala: ' + err.message;
+      }
+    }
+  }
+
+  function manualAdjustAutoId(side) {
+    const sourceCanvas = (side === 'back' && autoIdFullPage2Canvas) ? autoIdFullPage2Canvas : autoIdFullPageCanvas;
+    if (!sourceCanvas) return;
+
+    const dataUrl = sourceCanvas.toDataURL('image/jpeg', 0.95);
+    activeCropType = (side === 'front') ? 'auto_front' : 'auto_back';
+    imageToCrop.src = dataUrl;
+    cropModal.style.display = 'flex';
+    if (cropper) cropper.destroy();
+    cropper = new Cropper(imageToCrop, {
+      aspectRatio: 1013 / 638,
+      viewMode: 1,
+      autoCropArea: 0.5
+    });
+  }
+
+  document.getElementById('sendToA4SlotBtn').addEventListener('click', () => {
+    ctx1.clearRect(0, 0, CARD_W, CARD_H);
+    ctx1.drawImage(document.getElementById('autoFrontCanvas'), 0, 0);
+    ctx2.clearRect(0, 0, CARD_W, CARD_H);
+    ctx2.drawImage(document.getElementById('autoBackCanvas'), 0, 0);
+
+    img1Loaded = true;
+    img2Loaded = true;
+    addCardBtn.disabled = false;
+
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.querySelector('.tab-btn[onclick*="tab-cards"]').classList.add('active');
+    document.getElementById('tab-cards').classList.add('active');
+    addCardBtn.click();
+  });
+
+  document.getElementById('downloadSingleAutoIdBtn').addEventListener('click', () => {
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = A4_W;
+    tempCanvas.height = A4_H;
+    const tCtx = tempCanvas.getContext('2d');
+
+    tCtx.fillStyle = '#ffffff';
+    tCtx.fillRect(0, 0, A4_W, A4_H);
+
+    const totalPairWidth = (CARD_W * 2) + GAP_2_5MM_PX;
+    const startX = (A4_W - totalPairWidth) / 2;
+    const startY = 45;
+
+    tCtx.drawImage(document.getElementById('autoFrontCanvas'), startX, startY, CARD_W, CARD_H);
+    tCtx.drawImage(document.getElementById('autoBackCanvas'), startX + CARD_W + GAP_2_5MM_PX, startY, CARD_W, CARD_H);
+
+    tCtx.strokeStyle = '#000000';
+    tCtx.lineWidth = 6;
+    tCtx.strokeRect(startX, startY, CARD_W, CARD_H);
+    tCtx.strokeRect(startX + CARD_W + GAP_2_5MM_PX, startY, CARD_W, CARD_H);
+
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    pdf.addImage(tempCanvas.toDataURL('image/jpeg', 1.0), 'JPEG', 0, 0, 210, 297);
+
+    const cardType = document.getElementById('autoIdTypeSelect').value.toUpperCase();
+    const fileName = `Auto_${cardType}_Print.pdf`;
+    const blob = pdf.output('blob');
+    pdf.save(fileName);
+    saveToHistory(`Auto ID (${cardType})`, fileName, blob, 'application/pdf');
   });
 
   function initAllCanvases() {
