@@ -744,8 +744,8 @@
   </div>
 
   <div class="tab-nav">
-    <button class="tab-btn" onclick="switchTab('tab-auto-id')" style="border-color: #f59e0b; color: #fbbf24;">✨ Premium Auto ID Cropper</button>
-    <button class="tab-btn active" onclick="switchTab('tab-cards')">💳 ID Card (5 Slots)</button>
+    <button class="tab-btn active" onclick="switchTab('tab-auto-id')" style="border-color: #f59e0b;">✨ Premium Auto ID Cropper</button>
+    <button class="tab-btn" onclick="switchTab('tab-cards')">💳 ID Card (5 Slots)</button>
     <button class="tab-btn" onclick="switchTab('tab-passport')">👤 Passport Photos</button>
     <button class="tab-btn" onclick="switchTab('tab-name-passport')">📝 Name & Date Passport</button>
     <button class="tab-btn" onclick="switchTab('tab-4x6')">🖼️ 4×6 Photo Print</button>
@@ -760,8 +760,8 @@
   <div class="container">
     <button id="logoutBtn" class="logout-btn">🔒 Logout</button>
 
-    <!-- TAB 0: PREMIUM AUTO ID CROPPER -->
-    <div id="tab-auto-id" class="tab-content">
+    <!-- TAB 0: PREMIUM AUTO ID CROPPER (DEFAULT ACTIVE) -->
+    <div id="tab-auto-id" class="tab-content active">
       <div class="badge" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; border-color: #f59e0b;">✨ Premium • Auto PDF Crop • Password Support</div>
       <h1>Premium Auto ID Card Cropper</h1>
       <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 15px;">
@@ -819,7 +819,7 @@
     </div>
 
     <!-- TAB 1: 5 CARDS SYSTEM -->
-    <div id="tab-cards" class="tab-content active">
+    <div id="tab-cards" class="tab-content">
       <div class="badge">Auto-Dimension Crop • 2.5mm Gap • Broad Black Border • 5 Cards</div>
       <h1>Card Generator System</h1>
       <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">इमेज सिलेक्ट करते ही वह <strong>ऑटोमैटिकली सही ID साइज में फिट</strong> हो जाएगी। जरूरत पड़ने पर मैनुअल क्रॉप भी कर सकते हैं।</p>
@@ -1295,7 +1295,6 @@
   const AUTH_EMAIL = "oneplus777000@gmail.com";
   const DEFAULT_PASS = "Pass@123";
 
-  // Landing Page & Navigation
   const landingPage = document.getElementById('landingPage');
   const loginScreen = document.getElementById('loginScreen');
   const openPortalBtn = document.getElementById('openPortalBtn');
@@ -1337,17 +1336,14 @@
       const db = await openHistoryDB();
       const tx = db.transaction(DB_STORE, 'readwrite');
       const store = tx.objectStore(DB_STORE);
-      
-      const record = {
+      store.add({
         feature: featureName,
         fileName: fileName,
         data: blobOrDataUrl,
         fileType: fileType,
         timestamp: Date.now(),
         dateFormatted: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })
-      };
-
-      store.add(record);
+      });
       tx.oncomplete = () => cleanupOldHistoryRecords();
     } catch(err) {
       console.error("Storage error:", err);
@@ -1360,14 +1356,11 @@
       const tx = db.transaction(DB_STORE, 'readwrite');
       const store = tx.objectStore(DB_STORE);
       const now = Date.now();
-
       const request = store.openCursor();
       request.onsuccess = function(e) {
         const cursor = e.target.result;
         if (cursor) {
-          if (now - cursor.value.timestamp > RETENTION_MS) {
-            cursor.delete();
-          }
+          if (now - cursor.value.timestamp > RETENTION_MS) cursor.delete();
           cursor.continue();
         }
       };
@@ -1415,7 +1408,6 @@
     request.onsuccess = function() {
       const rec = request.result;
       if (!rec) return;
-
       const link = document.createElement('a');
       link.href = (typeof rec.data === 'string') ? rec.data : URL.createObjectURL(rec.data);
       link.download = rec.fileName;
@@ -1438,15 +1430,9 @@
   function switchTab(tabId) {
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-    
-    if (event && event.target) {
-      event.target.classList.add('active');
-    }
+    if (event && event.target) event.target.classList.add('active');
     document.getElementById(tabId).classList.add('active');
-
-    if (tabId === 'tab-history') {
-      renderHistoryTable();
-    }
+    if (tabId === 'tab-history') renderHistoryTable();
   }
 
   const changePwdScreen = document.getElementById('changePwdScreen');
@@ -1500,14 +1486,12 @@
       pwdStatusMsg.style.display = "block";
       return;
     }
-
     if (newP.length < 4) {
       pwdStatusMsg.innerText = "❌ नया पासवर्ड कम से कम 4 अक्षरों का होना चाहिए!";
       pwdStatusMsg.style.color = "#ef4444";
       pwdStatusMsg.style.display = "block";
       return;
     }
-
     if (newP !== confP) {
       pwdStatusMsg.innerText = "❌ नया पासवर्ड और कन्फर्म पासवर्ड मैच नहीं हो रहे!";
       pwdStatusMsg.style.color = "#ef4444";
@@ -1573,7 +1557,6 @@
 
   function openCropEngine(fileOrDataUrl, type) {
     activeCropType = type;
-    
     const handleLoadedImage = (src) => {
       imageToCrop.src = src;
       cropModal.style.display = 'flex';
@@ -1594,9 +1577,7 @@
       handleLoadedImage(fileOrDataUrl);
     } else {
       const reader = new FileReader();
-      reader.onload = function(e) {
-        handleLoadedImage(e.target.result);
-      };
+      reader.onload = (e) => handleLoadedImage(e.target.result);
       reader.readAsDataURL(fileOrDataUrl);
     }
   }
@@ -1605,7 +1586,6 @@
     const img = new Image();
     img.onload = function() {
       ctx.clearRect(0, 0, CARD_W, CARD_H);
-
       const srcRatio = img.width / img.height;
       const targetRatio = CARD_W / CARD_H;
       let sX = 0, sY = 0, sW = img.width, sH = img.height;
@@ -1630,19 +1610,14 @@
         document.getElementById('manualCropBackBtn').style.display = 'inline-block';
       }
 
-      if (img1Loaded && img2Loaded) {
-        addCardBtn.disabled = false;
-      }
+      if (img1Loaded && img2Loaded) addCardBtn.disabled = false;
     };
     img.src = dataUrl;
   }
 
   function openManualCropForCard(side) {
-    if (side === 'front' && frontCardRawData) {
-      openCropEngine(frontCardRawData, 'card_front');
-    } else if (side === 'back' && backCardRawData) {
-      openCropEngine(backCardRawData, 'card_back');
-    }
+    if (side === 'front' && frontCardRawData) openCropEngine(frontCardRawData, 'card_front');
+    else if (side === 'back' && backCardRawData) openCropEngine(backCardRawData, 'card_back');
   }
 
   cropSaveBtn.addEventListener('click', () => {
@@ -1729,9 +1704,7 @@
     if (file) {
       document.getElementById('file1Name').innerText = `✅ Auto-Fitted: ${file.name}`;
       const reader = new FileReader();
-      reader.onload = function(evt) {
-        autoFitCardToCanvas(evt.target.result, canvas1, ctx1, true);
-      };
+      reader.onload = (evt) => autoFitCardToCanvas(evt.target.result, canvas1, ctx1, true);
       reader.readAsDataURL(file);
     }
   });
@@ -1741,9 +1714,7 @@
     if (file) {
       document.getElementById('file2Name').innerText = `✅ Auto-Fitted: ${file.name}`;
       const reader = new FileReader();
-      reader.onload = function(evt) {
-        autoFitCardToCanvas(evt.target.result, canvas2, ctx2, false);
-      };
+      reader.onload = (evt) => autoFitCardToCanvas(evt.target.result, canvas2, ctx2, false);
       reader.readAsDataURL(file);
     }
   });
@@ -1765,11 +1736,9 @@
     a4Ctx.strokeRect(backCardX, currentY, CARD_W, CARD_H);
 
     addedCardsCount++;
-    if (addedCardsCount < MAX_CARDS) {
-      slotCounter.innerText = `Cards on Page: ${addedCardsCount} / ${MAX_CARDS} (Next Slot: #${addedCardsCount + 1})`;
-    } else {
-      slotCounter.innerText = `✅ Page Full: 5 / 5 Cards Added!`;
-    }
+    slotCounter.innerText = (addedCardsCount < MAX_CARDS)
+      ? `Cards on Page: ${addedCardsCount} / ${MAX_CARDS} (Next Slot: #${addedCardsCount + 1})`
+      : `✅ Page Full: 5 / 5 Cards Added!`;
 
     downloadPdfBtn.disabled = false;
     clearCurrentCardInputs();
@@ -1822,7 +1791,6 @@
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
     pdf.addImage(a4Canvas.toDataURL('image/jpeg', 1.0), 'JPEG', 0, 0, 210, 297);
-    
     const fileName = `A4_Cards_Sheet_${addedCardsCount}_Cards.pdf`;
     const blob = pdf.output('blob');
     pdf.save(fileName);
@@ -1853,7 +1821,6 @@
     if (!passportLoaded) return;
     passportSheetFormat = '4x6';
     const targetQty = Math.max(1, Math.min(8, parseInt(passportQtyInput.value) || 8));
-
     passportSheetCanvas.width = 1800;
     passportSheetCanvas.height = 1200;
     passportSheetCtx.fillStyle = '#ffffff';
@@ -1873,7 +1840,6 @@
         placed++;
       }
     }
-
     document.getElementById('passportSheetTitle').innerText = `Passport 4×6 Sheet (${targetQty} Photos Generated)`;
     document.getElementById('downloadPassportPdfBtn').disabled = false;
   });
@@ -1882,7 +1848,6 @@
     if (!passportLoaded) return;
     passportSheetFormat = 'a4';
     const targetQty = Math.max(1, Math.min(30, parseInt(passportQtyInput.value) || 30));
-
     passportSheetCanvas.width = 2480;
     passportSheetCanvas.height = 3508;
     passportSheetCtx.fillStyle = '#ffffff';
@@ -1902,7 +1867,6 @@
         placed++;
       }
     }
-
     document.getElementById('passportSheetTitle').innerText = `Passport A4 Sheet (${targetQty} Photos Generated)`;
     document.getElementById('downloadPassportPdfBtn').disabled = false;
   });
@@ -2038,7 +2002,6 @@
     if (!namePassportLoaded) return;
     namePassportSheetFormat = '4x6';
     const targetQty = Math.max(1, Math.min(8, parseInt(namePassportQtyInput.value) || 8));
-
     namePassportSheetCanvas.width = 1800;
     namePassportSheetCanvas.height = 1200;
     namePassportSheetCtx.fillStyle = '#ffffff';
@@ -2058,7 +2021,6 @@
         placed++;
       }
     }
-
     document.getElementById('namePassportSheetTitle').innerText = `Name & Date 4×6 Sheet (${targetQty} Photos Generated)`;
     document.getElementById('downloadNamePassportPdfBtn').disabled = false;
   });
@@ -2067,7 +2029,6 @@
     if (!namePassportLoaded) return;
     namePassportSheetFormat = 'a4';
     const targetQty = Math.max(1, Math.min(30, parseInt(namePassportQtyInput.value) || 30));
-
     namePassportSheetCanvas.width = 2480;
     namePassportSheetCanvas.height = 3508;
     namePassportSheetCtx.fillStyle = '#ffffff';
@@ -2087,7 +2048,6 @@
         placed++;
       }
     }
-
     document.getElementById('namePassportSheetTitle').innerText = `Name & Date A4 Sheet (${targetQty} Photos Generated)`;
     document.getElementById('downloadNamePassportPdfBtn').disabled = false;
   });
@@ -2142,7 +2102,6 @@
   document.getElementById('generateA4Custom4x6Btn').addEventListener('click', () => {
     if (!photo4x6Loaded) return;
     const qty = Math.max(1, Math.min(4, parseInt(photo4x6QtyInput.value) || 2));
-
     a4_4x6_SheetCanvas.width = 2480;
     a4_4x6_SheetCanvas.height = 3508;
     a4_4x6_SheetCtx.fillStyle = '#ffffff';
